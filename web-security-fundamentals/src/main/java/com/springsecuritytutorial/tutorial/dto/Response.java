@@ -9,7 +9,7 @@ import lombok.Getter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response {
 
+    private final String success;
     private final String status;
-    private final String token;
 
 }
