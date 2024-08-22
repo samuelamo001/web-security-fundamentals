@@ -3,11 +3,13 @@ package com.springsecuritytutorial.tutorial.service;
 import com.springsecuritytutorial.tutorial.dto.LoginRequest;
 import com.springsecuritytutorial.tutorial.dto.RegisterRequest;
 import com.springsecuritytutorial.tutorial.dto.Response;
-import com.springsecuritytutorial.tutorial.jwt.JwtService;
+import com.springsecuritytutorial.tutorial.security.jwt.JwtService;
 import com.springsecuritytutorial.tutorial.model.AppUser;
 import com.springsecuritytutorial.tutorial.repository.UserRepository;
+import com.springsecuritytutorial.tutorial.security.service.AuthenticatedUserDetails;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,11 +45,14 @@ public class AuthService {
 
     public Response login(LoginRequest request) {
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
 
-        AppUser user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        AuthenticatedUserDetails user = (AuthenticatedUserDetails) authentication.getPrincipal();
+        String token = jwtService.generateToken(user.appUser());
 
-        return Response.builder().status("login successful").build();
+
+
+        return Response.builder().status("login successful").token(token).build();
     }
 }

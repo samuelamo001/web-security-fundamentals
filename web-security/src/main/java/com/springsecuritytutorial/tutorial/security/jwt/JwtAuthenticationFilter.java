@@ -1,6 +1,6 @@
-package com.springsecuritytutorial.tutorial.jwt;
+package com.springsecuritytutorial.tutorial.security.jwt;
 
-import com.springsecuritytutorial.tutorial.security.CustomUserDetailService;
+import com.springsecuritytutorial.tutorial.security.service.AppUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +18,9 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final CustomUserDetailService userDetailService;
+    private final AppUserDetailsService userDetailService;
 
-    public JwtAuthenticationFilter(JwtService jwtService, CustomUserDetailService userDetailService) {
+    public JwtAuthenticationFilter(JwtService jwtService, AppUserDetailsService userDetailService) {
         this.jwtService = jwtService;
         this.userDetailService = userDetailService;
     }

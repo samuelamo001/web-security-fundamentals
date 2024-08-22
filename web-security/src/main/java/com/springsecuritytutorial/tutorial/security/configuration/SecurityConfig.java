@@ -1,6 +1,6 @@
-package com.springsecuritytutorial.tutorial.config;
-import com.springsecuritytutorial.tutorial.jwt.JwtAuthenticationFilter;
-import com.springsecuritytutorial.tutorial.security.CustomUserDetailService;
+package com.springsecuritytutorial.tutorial.security.configuration;
+import com.springsecuritytutorial.tutorial.security.jwt.JwtAuthenticationFilter;
+import com.springsecuritytutorial.tutorial.security.service.AppUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,10 +17,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final CustomUserDetailService userDetailsService;
+    private final AppUserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(CustomUserDetailService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(AppUserDetailsService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }

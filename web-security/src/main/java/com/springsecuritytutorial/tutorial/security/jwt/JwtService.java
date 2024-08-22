@@ -1,23 +1,31 @@
-package com.springsecuritytutorial.tutorial.jwt;
+package com.springsecuritytutorial.tutorial.security.jwt;
 
 import com.springsecuritytutorial.tutorial.model.AppUser;
+import com.springsecuritytutorial.tutorial.security.configuration.RsaKeyProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.cglib.core.internal.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 
 
 @Service
 public class JwtService {
 
-    private final String SECRET_KEY = "58923ce100b24436932a0ac158632ae6eeb3ca45f34194b54ad64f6cc53289de";
+    private final RSAPrivateKey privateKey;
+    private final RSAPublicKey publicKey;
+
+    public JwtService(RsaKeyProperties rsaKeyProperties) {
+        this.privateKey = rsaKeyProperties.privateKey();
+        this.publicKey = rsaKeyProperties.publicKey();
+    }
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("user_id", Long.class));
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -38,14 +46,13 @@ public class JwtService {
 
 
     private  <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
-        Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+        return claimsResolver.apply(extractAllClaims(token));
     }
 
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
-                .verifyWith(getSignInKey())
+                .verifyWith(publicKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
@@ -54,16 +61,12 @@ public class JwtService {
         return Jwts
                 .builder()
                 .subject(user.getUsername())
+                .claim("user_id", user.getId())
+                .claim("role", user.getRole())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
-                .signWith(getSignInKey())
+                .signWith(privateKey)
                 .compact();
     }
 
-    private SecretKey getSignInKey() {
-
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
 }

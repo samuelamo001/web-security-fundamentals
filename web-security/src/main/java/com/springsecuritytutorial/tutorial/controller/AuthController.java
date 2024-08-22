@@ -3,7 +3,6 @@ package com.springsecuritytutorial.tutorial.controller;
 import com.springsecuritytutorial.tutorial.dto.LoginRequest;
 import com.springsecuritytutorial.tutorial.dto.RegisterRequest;
 import com.springsecuritytutorial.tutorial.dto.Response;
-import com.springsecuritytutorial.tutorial.model.AppUser;
 import com.springsecuritytutorial.tutorial.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
