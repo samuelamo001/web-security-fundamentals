@@ -34,7 +34,6 @@ public class SecurityConfig {
                     authorizeRequests.requestMatchers("/api/v1/login/**", "/api/v1/register/**").permitAll();
                     authorizeRequests.anyRequest().authenticated();
                 })
-                .userDetailsService(userDetailsService)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

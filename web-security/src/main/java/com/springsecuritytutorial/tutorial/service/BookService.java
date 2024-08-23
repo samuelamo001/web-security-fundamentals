@@ -46,7 +46,7 @@ public class BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
-        // Check if the book belongs to the user
+
         if (!book.getUser().getId().equals(userId)) {
             throw new RuntimeException("You do not have permission to view this book");
         }
@@ -55,7 +55,7 @@ public class BookService {
 
     public List<BookDTO> getAllBooks(String token) {
         Long userId = jwtService.extractUserId(token);
-        List<Book> books = bookRepository.findByUserId(userId); // Ensure this method is defined in your repository
+        List<Book> books = bookRepository.findByUserId(userId);
         return books.stream()
                 .map(bookMapper::convertToDTO)
                 .collect(Collectors.toList());

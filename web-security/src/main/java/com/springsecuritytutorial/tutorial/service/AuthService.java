@@ -51,8 +51,7 @@ public class AuthService {
         AuthenticatedUserDetails user = (AuthenticatedUserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(user.appUser());
 
-
-
         return Response.builder().status("login successful").token(token).build();
     }
+
 }
