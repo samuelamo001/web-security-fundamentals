@@ -1,6 +1,5 @@
-package com.springsecuritytutorial.tutorial.security.configuration;
+package com.springsecuritytutorial.tutorial.security;
 import com.springsecuritytutorial.tutorial.security.jwt.JwtAuthenticationFilter;
-import com.springsecuritytutorial.tutorial.security.service.AppUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
