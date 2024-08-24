@@ -30,13 +30,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests( authorizeRequests -> {
-                    authorizeRequests.requestMatchers("/api/v1/login/**", "/api/v1/register/**").permitAll();
-                    authorizeRequests.anyRequest().authenticated();
-                })
-                .userDetailsService(userDetailsService)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests( authorizeRequests -> authorizeRequests
+                        .requestMatchers("/api/v1/login/**", "/api/v1/register/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
