@@ -41,9 +41,9 @@ public class BookService {
         return bookMapper.convertToDTO(book);
     }
 
-    public BookDTO getBookById(Long id, String token) {
+    public BookDTO getBookById(Long bookId, String token) {
         Long userId = jwtService.extractUserId(token);
-        Book book = bookRepository.findById(id)
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
 
@@ -61,21 +61,21 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteBookById(Long id, String token) {
+    public void deleteBookById(Long bookId, String token) {
         Long userId = jwtService.extractUserId(token);
-        Book book = bookRepository.findById(id)
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
         if (!book.getUser().getId().equals(userId)) {
             throw new RuntimeException("You do not have permission to delete this book");
         }
 
-        bookRepository.deleteById(id);
+        bookRepository.deleteById(bookId);
     }
 
-    public BookDTO updateBook(Long id, BookDTO bookDTO, String token) {
+    public BookDTO updateBook(Long bookId, BookDTO bookDTO, String token) {
         Long userId = jwtService.extractUserId(token);
-        Book book = bookRepository.findById(id)
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
 
