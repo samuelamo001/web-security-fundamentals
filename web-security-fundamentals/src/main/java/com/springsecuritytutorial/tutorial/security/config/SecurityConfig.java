@@ -19,15 +19,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests( authorizeRequests -> {
-                    authorizeRequests.requestMatchers("/api/v1/login/**", "/api/v1/register/**").permitAll();
-                    authorizeRequests.requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
-                    authorizeRequests.requestMatchers("/api/v1/home-page").hasAnyRole("USER", "ADMIN");
-                    authorizeRequests.anyRequest().authenticated();
-                })
-
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/api/v1/login/**", "/api/v1/register/**").permitAll()
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api//v1/home-page").hasAnyRole("ADMIN", "USER")
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .build();
     }
 
