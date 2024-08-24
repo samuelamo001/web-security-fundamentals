@@ -33,17 +33,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .requiresChannel(channel->{channel.anyRequest().requiresSecure();})
+                .requiresChannel( channelRequestMatcherRegistry -> channelRequestMatcherRegistry
+                        .anyRequest().requiresSecure()
+                )
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests( authorizeRequests -> {
-                    authorizeRequests.requestMatchers("/api/v1/login/**", "/api/v1/register/**").permitAll();
-                    authorizeRequests.anyRequest().authenticated();
-                })
-                .exceptionHandling(exception -> {
-                    exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
-                })
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/api/v1/login/**", "/api/v1/register/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(httpSecurityExceptionHandling -> httpSecurityExceptionHandling
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                )
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
