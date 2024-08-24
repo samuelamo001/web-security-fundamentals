@@ -3,6 +3,8 @@ package com.springsecuritytutorial.tutorial.service;
 import com.springsecuritytutorial.tutorial.dto.LoginRequest;
 import com.springsecuritytutorial.tutorial.dto.RegisterRequest;
 import com.springsecuritytutorial.tutorial.dto.Response;
+import com.springsecuritytutorial.tutorial.exception.AuthenticationFailedException;
+import com.springsecuritytutorial.tutorial.exception.UserAlreadyExistException;
 import com.springsecuritytutorial.tutorial.security.jwt.JwtService;
 import com.springsecuritytutorial.tutorial.model.AppUser;
 import com.springsecuritytutorial.tutorial.repository.UserRepository;
@@ -30,12 +32,19 @@ public class AuthService {
     }
 
     public Response register(RegisterRequest request) {
+
+
+
         AppUser newUser = new AppUser();
         newUser.setFirstname(request.getFirstname());
         newUser.setLastname(request.getLastname());
         newUser.setUsername(request.getUsername());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
         newUser.setRole(request.getRole());
+
+        if(userRepository.findByUsername(request.getUsername()).isPresent()){
+            throw new UserAlreadyExistException("User with name " + request.getUsername() + " already exists");
+        }
 
         userRepository.save(newUser);
 
@@ -46,7 +55,6 @@ public class AuthService {
     public Response login(LoginRequest request) {
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-
 
         AuthenticatedUserDetails user = (AuthenticatedUserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(user.appUser());

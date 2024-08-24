@@ -1,4 +1,5 @@
 package com.springsecuritytutorial.tutorial.security.configuration;
+import com.springsecuritytutorial.tutorial.exception.CustomAuthenticationEntryPoint;
 import com.springsecuritytutorial.tutorial.security.jwt.JwtAuthenticationFilter;
 import com.springsecuritytutorial.tutorial.security.service.AppUserDetailsService;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +12,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +38,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests( authorizeRequests -> {
                     authorizeRequests.requestMatchers("/api/v1/login/**", "/api/v1/register/**").permitAll();
                     authorizeRequests.anyRequest().authenticated();
+                })
+                .exceptionHandling(exception -> {
+                    exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
                 })
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
