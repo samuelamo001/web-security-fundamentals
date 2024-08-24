@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import java.io.IOException;
 
@@ -22,19 +23,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests( authorizeRequests -> {
-                    authorizeRequests.requestMatchers("/login").permitAll();
-                    authorizeRequests.anyRequest().authenticated();
-                })
-                .oauth2Login((oauth2Login) -> {
-                    oauth2Login
-                            .loginPage("/login")
-                            .successHandler((request, response, authentication) -> response.sendRedirect("/profile"));
+                .csrf(csrf-> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                )
 
-                })
+                .authorizeHttpRequests( authorizeRequests -> authorizeRequests
+                        .requestMatchers("/login").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2Login -> oauth2Login
+                            .loginPage("/login")
+                            .successHandler((request, response, authentication) -> response.sendRedirect("/profile"))
+                )
                 .build();
     }
-
-
 }
