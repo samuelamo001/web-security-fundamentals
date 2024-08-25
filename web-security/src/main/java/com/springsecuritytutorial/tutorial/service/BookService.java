@@ -46,7 +46,6 @@ public class BookService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
-
         if (!book.getUser().getId().equals(userId)) {
             throw new RuntimeException("You do not have permission to view this book");
         }
@@ -77,7 +76,6 @@ public class BookService {
         Long userId = jwtService.extractUserId(token);
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
-
 
         if (!book.getUser().getId().equals(userId)) {
             throw new RuntimeException("You do not have permission to update this book");
