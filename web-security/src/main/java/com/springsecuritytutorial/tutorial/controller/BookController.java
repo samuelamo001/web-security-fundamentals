@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/v1/book")
 public class BookController {
 
-    private BookService bookService;
+    private final BookService bookService;
     @PostMapping
     public Book createBook(@RequestBody BookDTO bookDTO, @RequestHeader("Authorization") String authorizationHeader) {
         String token = JwtTokenUtil.extractToken(authorizationHeader);

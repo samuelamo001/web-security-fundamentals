@@ -5,20 +5,19 @@ import com.springsecuritytutorial.tutorial.dto.RegisterRequest;
 import com.springsecuritytutorial.tutorial.dto.Response;
 import com.springsecuritytutorial.tutorial.service.AuthService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1")
 public class AuthController {
 
     private final AuthService authService;
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @PostMapping("/register")
     public ResponseEntity<Response> register(@Valid @RequestBody RegisterRequest register) {
