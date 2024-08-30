@@ -15,22 +15,22 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RegisterRequest {
     private Integer id;
-    @NotBlank()
+    @NotBlank
     @Size(min = 3, max = 20)
     private String firstname;
 
-    @NotBlank()
+    @NotBlank
     @Size(min = 3, max = 20)
     private String lastname;
 
-    @NotBlank()
+    @NotBlank
     @Size(min = 3, max = 20)
     private String username;
 
-    @NotBlank()
+    @NotBlank
     @Size(min = 8)
     private String password;
 
-    @NotNull()
+    @NotNull
     private Role role;
 }

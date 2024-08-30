@@ -2,12 +2,15 @@ package com.springsecuritytutorial.tutorial.mapper;
 
 import com.springsecuritytutorial.tutorial.dto.BookDTO;
 import com.springsecuritytutorial.tutorial.model.Book;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+@Component
+public class BookMapper {
 
-@Mapper(componentModel = "spring")
-public interface BookMapper {
-    BookDTO convertToDTO(Book book);
-    Book convertToEntity(BookDTO bookDTO);
+    public BookDTO convertToDTO(Book book) {
+        return BookDTO.builder()
+                .id(book.getId())
+                .title(book.getTitle())
+                .build();
+    }
 }

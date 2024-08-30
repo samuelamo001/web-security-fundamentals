@@ -8,7 +8,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 
-public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class AppAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         throw new UnauthorizedAccessException("Unauthorized. Please log in to access this resource");
